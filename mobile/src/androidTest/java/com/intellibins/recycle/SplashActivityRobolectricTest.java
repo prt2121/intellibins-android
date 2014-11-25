@@ -29,6 +29,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
 import android.app.Activity;
 import android.graphics.drawable.ColorDrawable;
@@ -40,9 +42,8 @@ import static org.junit.Assert.assertThat;
 /**
  * Created by prt2121 on 11/23/14.
  */
-//@Config(emulateSdk = 18, manifest = "mobile/src/main/AndroidManifest.xml")
-//@RunWith(RobolectricGradleTestRunner.class)
-@RunWith(RobolectricGradleTestRunner.class)
+@Config(emulateSdk = 18)
+@RunWith(RobolectricTestRunner.class)
 public class SplashActivityRobolectricTest {
 
     private Activity mActivity;
@@ -65,3 +66,6 @@ public class SplashActivityRobolectricTest {
         assertThat(color, equalTo(primary));
     }
 }
+//, manifest = "mobile/src/main/AndroidManifest.xml"
+//@RunWith(RobolectricGradleTestRunner.class)
+
