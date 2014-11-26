@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2014 Intellibins authors
   ~
@@ -23,24 +24,14 @@
   ~ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   -->
 
-<resources>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- colorPrimary is used for the default action bar background -->
-        <item name="colorPrimary">@color/primary</item>
-
-        <!-- colorPrimaryDark is used for the status bar -->
-        <item name="colorPrimaryDark">@color/primary_dark</item>
-
-        <!-- colorAccent is used as the default value for colorControlActivated
-             which is used to tint widgets -->
-        <item name="colorAccent">@color/accent</item>
-    </style>
-
-    <style name="AppThemeNoActionBar" parent="@style/AppTheme">
-        <item name="windowActionBar">false</item>
-        <item name="android:windowContentOverlay">@null</item>
-        <item name="android:background">@color/primary</item>
-    </style>
-</resources>
+    <TextView style="?android:textAppearanceMedium"
+        android:padding="16dp"
+        android:lineSpacingMultiplier="1.2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+</ScrollView>
