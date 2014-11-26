@@ -72,9 +72,8 @@ public class SplashActivityRobolectricTest {
 
     @Test
     public void testNextStartedActivity() {
-        ShadowActivity shadowHome = Robolectric.shadowOf(mActivity);
-        //Robolectric.getUiThreadScheduler().advanceBy(1000);
-        assertThat(shadowHome.peekNextStartedActivityForResult().intent.getComponent(),
+        ShadowActivity shadowActivity = Robolectric.shadowOf(mActivity);
+        assertThat(shadowActivity.peekNextStartedActivityForResult().intent.getComponent(),
                 equalTo(new ComponentName(mActivity, OnboardingActivity.class)));
     }
 }
