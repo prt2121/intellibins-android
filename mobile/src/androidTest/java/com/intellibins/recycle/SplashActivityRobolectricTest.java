@@ -60,12 +60,11 @@ public class SplashActivityRobolectricTest {
 
     @Test
     public void testSplashScreenBackgroundColor() throws Exception {
-        int color = ((ColorDrawable) mActivity.findViewById(R.id.layout_splash).getBackground())
+        int color = ((ColorDrawable) mActivity
+                .findViewById(R.id.layout_splash)
+                .getBackground())
                 .getColor();
         int primary = mActivity.getResources().getColor(R.color.primary);
         assertThat(color, equalTo(primary));
     }
 }
-//, manifest = "mobile/src/main/AndroidManifest.xml"
-//@RunWith(RobolectricGradleTestRunner.class)
-

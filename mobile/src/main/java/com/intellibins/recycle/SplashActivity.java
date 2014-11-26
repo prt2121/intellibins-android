@@ -26,9 +26,9 @@
 package com.intellibins.recycle;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.os.Handler;
 
 public class SplashActivity extends Activity {
 
@@ -36,6 +36,15 @@ public class SplashActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+        int splashScreenTimeout = 1000;
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Intent mainIntent = new Intent(SplashActivity.this, OnboardingActivity.class);
+                SplashActivity.this.startActivity(mainIntent);
+                SplashActivity.this.finish();
+            }
+        }, splashScreenTimeout);
     }
 
 }
