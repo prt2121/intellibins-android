@@ -47,4 +47,3 @@
     </application>
 
 </manifest>
-    <!-- robolectric issue android:theme="@style/AppTheme" -->
