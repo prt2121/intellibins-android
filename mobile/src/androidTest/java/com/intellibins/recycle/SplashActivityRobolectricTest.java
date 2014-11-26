@@ -31,8 +31,10 @@ import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
+import org.robolectric.shadows.ShadowActivity;
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.graphics.drawable.ColorDrawable;
 
 import static org.hamcrest.core.IsEqual.equalTo;
@@ -66,5 +68,13 @@ public class SplashActivityRobolectricTest {
                 .getColor();
         int primary = mActivity.getResources().getColor(R.color.primary);
         assertThat(color, equalTo(primary));
+    }
+
+    @Test
+    public void testNextStartedActivity() {
+        ShadowActivity shadowHome = Robolectric.shadowOf(mActivity);
+        //Robolectric.getUiThreadScheduler().advanceBy(1000);
+        assertThat(shadowHome.peekNextStartedActivityForResult().intent.getComponent(),
+                equalTo(new ComponentName(mActivity, OnboardingActivity.class)));
     }
 }
