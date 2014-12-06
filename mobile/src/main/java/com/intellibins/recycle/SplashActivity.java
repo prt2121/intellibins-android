@@ -27,8 +27,10 @@ package com.intellibins.recycle;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 
 public class SplashActivity extends Activity {
 
@@ -40,11 +42,24 @@ public class SplashActivity extends Activity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent mainIntent = new Intent(SplashActivity.this, OnboardingActivity.class);
-                SplashActivity.this.startActivity(mainIntent);
+                Class<?> clazz = showOnboarding() ? OnboardingActivity.class : MapActivity.class;
+                Intent intent = new Intent(SplashActivity.this, clazz);
+                SplashActivity.this.startActivity(intent);
                 SplashActivity.this.finish();
             }
         }, splashScreenTimeout);
+    }
+
+    private boolean showOnboarding() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        if (!prefs.contains("firstRun") || prefs.getBoolean("firstRun", false)) {
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putBoolean("firstRun", false);
+            editor.apply();
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }

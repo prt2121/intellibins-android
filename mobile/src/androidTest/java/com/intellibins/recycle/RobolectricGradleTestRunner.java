@@ -23,59 +23,34 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-apply plugin: 'com.android.application'
-apply plugin: 'robolectric'
+package com.intellibins.recycle;
 
-repositories {
-    maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
-}
+import org.junit.runners.model.InitializationError;
+import org.robolectric.AndroidManifest;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
+import org.robolectric.res.Fs;
 
-android {
-    compileSdkVersion 21
-    buildToolsVersion "21.1.1"
+/**
+ * Custom gradle test runner for Robolectric.
+ * From http://blog.blundell-apps.com/android-gradle-app-with-robolectric-junit-tests/
+ */
+public class RobolectricGradleTestRunner extends RobolectricTestRunner {
+    private static final int MAX_SDK_SUPPORTED_BY_ROBOLECTRIC = 18;
 
-    defaultConfig {
-        applicationId "com.intellibins.recycle"
-        minSdkVersion 14
-        targetSdkVersion 21
-        versionCode 1
-        versionName "1.0"
+    public RobolectricGradleTestRunner(Class<?> testClass) throws InitializationError {
+        super(testClass);
     }
 
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
+    @Override
+    protected AndroidManifest getAppManifest(Config config) {
+        final String manifestProperty = "../mobile/src/main/AndroidManifest.xml";
+        final String resProperty = "../mobile/src/main/res";
+        return new AndroidManifest(Fs.fileFromPath(manifestProperty), Fs.fileFromPath(resProperty)) {
+            @Override
+            public int getTargetSdkVersion() {
+                return MAX_SDK_SUPPORTED_BY_ROBOLECTRIC;
+            }
+        };
     }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
-    sourceSets {
-        androidTest {
-            setRoot('src/androidTest')
-        }
-    }
-    lintOptions {
-        abortOnError false
-        disable 'InvalidPackage'
-    }
-}
-
-dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-//    wearApp project(':wear')
-    compile 'com.android.support:appcompat-v7:21.0.2'
-    compile 'com.google.android.gms:play-services:6.1.71'
-
-    androidTestCompile 'junit:junit:4.10'
-    androidTestCompile 'org.robolectric:robolectric:2.4'
-    //androidTestCompile 'org.robolectric:robolectric:2.4-SNAPSHOT'
-    androidTestCompile 'com.squareup:fest-android:1.0.8'
-}
-
-robolectric {
-    include '**/*Test.class'
-    maxHeapSize = "2048m"
 }

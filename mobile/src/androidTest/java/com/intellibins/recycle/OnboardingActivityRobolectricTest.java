@@ -23,59 +23,42 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-apply plugin: 'com.android.application'
-apply plugin: 'robolectric'
+//package com.intellibins.recycle;
 
-repositories {
-    maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
-}
+//import org.junit.Before;
+//import org.junit.Test;
+//import org.junit.runner.RunWith;
+//import org.robolectric.Robolectric;
+//import org.robolectric.RobolectricTestRunner;
+//import org.robolectric.annotation.Config;
+//
+//import android.app.Activity;
+//
+//import static org.junit.Assert.assertNotNull;
 
-android {
-    compileSdkVersion 21
-    buildToolsVersion "21.1.1"
+/**
+ * Created by prt2121 on 12/3/14.
+ */
+//@Config(emulateSdk = 18)
+//@RunWith(RobolectricTestRunner.class)
+//public class OnboardingActivityRobolectricTest {
 
-    defaultConfig {
-        applicationId "com.intellibins.recycle"
-        minSdkVersion 14
-        targetSdkVersion 21
-        versionCode 1
-        versionName "1.0"
+    /*private Activity mActivity;
+
+    @Before
+    public void setup() {
+        //mActivity = Robolectric.setupActivity(OnboardingActivity.class);
+        mActivity = Robolectric.buildActivity(OnboardingActivity.class).create().get();
     }
 
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
+    @Test
+    public void testActivityFound() {
+        assertNotNull(mActivity);
     }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
-    sourceSets {
-        androidTest {
-            setRoot('src/androidTest')
-        }
-    }
-    lintOptions {
-        abortOnError false
-        disable 'InvalidPackage'
-    }
-}
 
-dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-//    wearApp project(':wear')
-    compile 'com.android.support:appcompat-v7:21.0.2'
-    compile 'com.google.android.gms:play-services:6.1.71'
-
-    androidTestCompile 'junit:junit:4.10'
-    androidTestCompile 'org.robolectric:robolectric:2.4'
-    //androidTestCompile 'org.robolectric:robolectric:2.4-SNAPSHOT'
-    androidTestCompile 'com.squareup:fest-android:1.0.8'
-}
-
-robolectric {
-    include '**/*Test.class'
-    maxHeapSize = "2048m"
-}
+    @Test
+    public void testViewPagerFound() {
+        //mActivity.onCreate(null, null);
+        assertNotNull(mActivity.findViewById(R.id.pager_onboarding));
+    }*/
+//}
