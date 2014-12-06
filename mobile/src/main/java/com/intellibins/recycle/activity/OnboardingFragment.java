@@ -23,42 +23,41 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-//package com.intellibins.recycle;
+package com.intellibins.recycle.activity;
 
-//import org.junit.Before;
-//import org.junit.Test;
-//import org.junit.runner.RunWith;
-//import org.robolectric.Robolectric;
-//import org.robolectric.RobolectricTestRunner;
-//import org.robolectric.annotation.Config;
-//
-//import android.app.Activity;
-//
-//import static org.junit.Assert.assertNotNull;
+
+import com.intellibins.recycle.R;
+
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
 /**
- * Created by prt2121 on 12/3/14.
+ * Created by prt2121 on 11/25/14.
  */
-//@Config(emulateSdk = 18)
-//@RunWith(RobolectricTestRunner.class)
-//public class OnboardingActivityRobolectricTest {
+public class OnboardingFragment extends Fragment {
 
-    /*private Activity mActivity;
+    public static final String ARG_POSITION = "position";
 
-    @Before
-    public void setup() {
-        //mActivity = Robolectric.setupActivity(OnboardingActivity.class);
-        mActivity = Robolectric.buildActivity(OnboardingActivity.class).get().get();
+    public static OnboardingFragment newInstance(int position) {
+        OnboardingFragment f = new OnboardingFragment();
+        Bundle args = new Bundle();
+        args.putInt(ARG_POSITION, position);
+        f.setArguments(args);
+        return f;
     }
 
-    @Test
-    public void testActivityFound() {
-        assertNotNull(mActivity);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+            Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.view_onboarding, container, false);
+        Bundle args = getArguments();
+        ((TextView) rootView.findViewById(R.id.textview_onboarding)).setText(
+                Integer.toString(args.getInt(ARG_POSITION)));
+        return rootView;
     }
 
-    @Test
-    public void testViewPagerFound() {
-        //mActivity.onCreate(null, null);
-        assertNotNull(mActivity.findViewById(R.id.pager_onboarding));
-    }*/
-//}
+}

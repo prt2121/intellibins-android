@@ -23,39 +23,41 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.intellibins.recycle;
+package com.intellibins.recycle.activity;
 
+import com.intellibins.recycle.ISharedPreferencesHelper;
+import com.intellibins.recycle.R;
+import com.intellibins.recycle.SharedPreferencesHelperFactory;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
+import android.os.Handler;
 
-/**
- * Created by prt2121 on 11/25/14.
- */
-public class OnboardingFragment extends Fragment {
+public class SplashActivity extends Activity {
 
-    public static final String ARG_POSITION = "position";
-
-    public static OnboardingFragment newInstance(int position) {
-        OnboardingFragment f = new OnboardingFragment();
-        Bundle args = new Bundle();
-        args.putInt(ARG_POSITION, position);
-        f.setArguments(args);
-        return f;
-    }
+    private ISharedPreferencesHelper mSharedPreferencesHelper;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.view_onboarding, container, false);
-        Bundle args = getArguments();
-        ((TextView) rootView.findViewById(R.id.textview_onboarding)).setText(
-                Integer.toString(args.getInt(ARG_POSITION)));
-        return rootView;
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_splash);
+        int splashScreenTimeout = 2000;
+        mSharedPreferencesHelper = SharedPreferencesHelperFactory.get();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                boolean firstRun = mSharedPreferencesHelper.isFirstRun(SplashActivity.this);
+                Class<?> clazz = firstRun
+                        ? OnboardingActivity.class : MapActivity.class;
+                if (firstRun) {
+                    mSharedPreferencesHelper.setFirstRun(SplashActivity.this, false);
+                }
+                Intent intent = new Intent(SplashActivity.this, clazz);
+                SplashActivity.this.startActivity(intent);
+                SplashActivity.this.finish();
+            }
+        }, splashScreenTimeout);
     }
 
 }

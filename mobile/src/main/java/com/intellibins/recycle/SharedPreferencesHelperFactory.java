@@ -25,41 +25,20 @@
 
 package com.intellibins.recycle;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.Bundle;
-import android.os.Handler;
-import android.preference.PreferenceManager;
+/**
+ * Created by prt2121 on 12/6/14.
+ */
+public class SharedPreferencesHelperFactory {
 
-public class SplashActivity extends Activity {
+    private static boolean testing = false;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splash);
-        int splashScreenTimeout = 2000;
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Class<?> clazz = showOnboarding() ? OnboardingActivity.class : MapActivity.class;
-                Intent intent = new Intent(SplashActivity.this, clazz);
-                SplashActivity.this.startActivity(intent);
-                SplashActivity.this.finish();
-            }
-        }, splashScreenTimeout);
-    }
+    private static ISharedPreferencesHelper mSharedPreferencesHelper = null;
 
-    private boolean showOnboarding() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        if (!prefs.contains("firstRun") || prefs.getBoolean("firstRun", false)) {
-            SharedPreferences.Editor editor = prefs.edit();
-            editor.putBoolean("firstRun", false);
-            editor.apply();
-            return true;
-        } else {
-            return false;
+    public static ISharedPreferencesHelper get() {
+        if(mSharedPreferencesHelper == null) {
+            mSharedPreferencesHelper = testing ? new MockSharedPreferencesHelper() : new SharedPreferencesHelper();
         }
+        return mSharedPreferencesHelper;
     }
 
 }

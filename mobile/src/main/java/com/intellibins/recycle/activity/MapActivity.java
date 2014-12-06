@@ -23,42 +23,44 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-//package com.intellibins.recycle;
+package com.intellibins.recycle.activity;
 
-//import org.junit.Before;
-//import org.junit.Test;
-//import org.junit.runner.RunWith;
-//import org.robolectric.Robolectric;
-//import org.robolectric.RobolectricTestRunner;
-//import org.robolectric.annotation.Config;
-//
-//import android.app.Activity;
-//
-//import static org.junit.Assert.assertNotNull;
+import com.intellibins.recycle.R;
 
-/**
- * Created by prt2121 on 12/3/14.
- */
-//@Config(emulateSdk = 18)
-//@RunWith(RobolectricTestRunner.class)
-//public class OnboardingActivityRobolectricTest {
+import android.support.v7.app.ActionBarActivity;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 
-    /*private Activity mActivity;
 
-    @Before
-    public void setup() {
-        //mActivity = Robolectric.setupActivity(OnboardingActivity.class);
-        mActivity = Robolectric.buildActivity(OnboardingActivity.class).get().get();
+public class MapActivity extends ActionBarActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_map);
     }
 
-    @Test
-    public void testActivityFound() {
-        assertNotNull(mActivity);
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_map, menu);
+        return true;
     }
 
-    @Test
-    public void testViewPagerFound() {
-        //mActivity.onCreate(null, null);
-        assertNotNull(mActivity.findViewById(R.id.pager_onboarding));
-    }*/
-//}
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+}

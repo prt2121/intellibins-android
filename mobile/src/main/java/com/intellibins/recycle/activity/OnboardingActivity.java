@@ -23,42 +23,58 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-//package com.intellibins.recycle;
+package com.intellibins.recycle.activity;
 
-//import org.junit.Before;
-//import org.junit.Test;
-//import org.junit.runner.RunWith;
-//import org.robolectric.Robolectric;
-//import org.robolectric.RobolectricTestRunner;
-//import org.robolectric.annotation.Config;
-//
-//import android.app.Activity;
-//
-//import static org.junit.Assert.assertNotNull;
+import com.intellibins.recycle.R;
 
-/**
- * Created by prt2121 on 12/3/14.
- */
-//@Config(emulateSdk = 18)
-//@RunWith(RobolectricTestRunner.class)
-//public class OnboardingActivityRobolectricTest {
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBarActivity;
 
-    /*private Activity mActivity;
 
-    @Before
-    public void setup() {
-        //mActivity = Robolectric.setupActivity(OnboardingActivity.class);
-        mActivity = Robolectric.buildActivity(OnboardingActivity.class).get().get();
+public class OnboardingActivity extends ActionBarActivity {
+
+    private static final int NUM_PAGES = 3;
+
+    private ViewPager mPager;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_onboarding);
+
+        mPager = (ViewPager) findViewById(R.id.pager_onboarding);
+        PagerAdapter pagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
+        mPager.setAdapter(pagerAdapter);
     }
 
-    @Test
-    public void testActivityFound() {
-        assertNotNull(mActivity);
+    @Override
+    public void onBackPressed() {
+        if (mPager.getCurrentItem() == 0) {
+            super.onBackPressed();
+        } else {
+            mPager.setCurrentItem(mPager.getCurrentItem() - 1);
+        }
     }
 
-    @Test
-    public void testViewPagerFound() {
-        //mActivity.onCreate(null, null);
-        assertNotNull(mActivity.findViewById(R.id.pager_onboarding));
-    }*/
-//}
+    private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
+
+        public ScreenSlidePagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return OnboardingFragment.newInstance(position);
+        }
+
+        @Override
+        public int getCount() {
+            return NUM_PAGES;
+        }
+    }
+}

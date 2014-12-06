@@ -23,42 +23,29 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-//package com.intellibins.recycle;
+package com.intellibins.recycle;
 
-//import org.junit.Before;
-//import org.junit.Test;
-//import org.junit.runner.RunWith;
-//import org.robolectric.Robolectric;
-//import org.robolectric.RobolectricTestRunner;
-//import org.robolectric.annotation.Config;
-//
-//import android.app.Activity;
-//
-//import static org.junit.Assert.assertNotNull;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 /**
- * Created by prt2121 on 12/3/14.
+ * Created by prt2121 on 12/6/14.
  */
-//@Config(emulateSdk = 18)
-//@RunWith(RobolectricTestRunner.class)
-//public class OnboardingActivityRobolectricTest {
+public class SharedPreferencesHelper implements ISharedPreferencesHelper {
 
-    /*private Activity mActivity;
-
-    @Before
-    public void setup() {
-        //mActivity = Robolectric.setupActivity(OnboardingActivity.class);
-        mActivity = Robolectric.buildActivity(OnboardingActivity.class).get().get();
+    @Override
+    public boolean isFirstRun(Context context) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        return (!prefs.contains("firstRun") || prefs.getBoolean("firstRun", false));
     }
 
-    @Test
-    public void testActivityFound() {
-        assertNotNull(mActivity);
+    @Override
+    public void setFirstRun(Context context, boolean firstRun) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean("firstRun", firstRun);
+        editor.apply();
     }
 
-    @Test
-    public void testViewPagerFound() {
-        //mActivity.onCreate(null, null);
-        assertNotNull(mActivity.findViewById(R.id.pager_onboarding));
-    }*/
-//}
+}
