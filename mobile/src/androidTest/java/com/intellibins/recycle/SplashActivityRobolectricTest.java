@@ -25,7 +25,6 @@
 
 package com.intellibins.recycle;
 
-import com.intellibins.recycle.activity.MapActivity;
 import com.intellibins.recycle.activity.MapsActivity;
 import com.intellibins.recycle.activity.OnboardingActivity;
 import com.intellibins.recycle.activity.SplashActivity;
@@ -77,7 +76,8 @@ public class SplashActivityRobolectricTest {
 
     @Test
     public void testNextStartedActivity() {
-        boolean firstRun = SharedPreferencesHelperFactory.get().isFirstRun(Robolectric.application.getApplicationContext());
+        boolean firstRun = SharedPreferencesHelperFactory.get()
+                .isFirstRun(Robolectric.application.getApplicationContext());
         Class<?> clazz = firstRun
                 ? OnboardingActivity.class : MapsActivity.class;
         ShadowActivity shadowActivity = Robolectric.shadowOf(mActivity);
