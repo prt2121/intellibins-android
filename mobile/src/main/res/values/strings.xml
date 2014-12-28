@@ -31,5 +31,6 @@
     <string name="title_activity_onboarding">OnboardingActivity</string>
     <string name="title_activity_map">MapActivity</string>
     <string name="skip">SKIP</string>
+    <string name="next">NEXT</string>
 
 </resources>

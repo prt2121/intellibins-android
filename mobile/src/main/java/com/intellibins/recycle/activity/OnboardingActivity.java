@@ -26,7 +26,9 @@
 package com.intellibins.recycle.activity;
 
 import com.intellibins.recycle.R;
+import com.intellibins.recycle.view.CirclePageIndicator;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -34,7 +36,8 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
-import com.viewpagerindicator.CirclePageIndicator;
+import android.view.View;
+import android.widget.Button;
 
 public class OnboardingActivity extends ActionBarActivity {
 
@@ -42,7 +45,7 @@ public class OnboardingActivity extends ActionBarActivity {
 
     private ViewPager mPager;
 
-    private CirclePageIndicator mIndicator;
+    private Button mSkipButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,8 +56,18 @@ public class OnboardingActivity extends ActionBarActivity {
         PagerAdapter pagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
         mPager.setAdapter(pagerAdapter);
 
-        mIndicator = (CirclePageIndicator) findViewById(R.id.indicator);
-        mIndicator.setViewPager(mPager);
+        CirclePageIndicator circlePageIndicator = (CirclePageIndicator) findViewById(R.id.indicator);
+        circlePageIndicator.setViewPager(mPager);
+
+        mSkipButton = (Button) findViewById(R.id.skipButton);
+        mSkipButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(OnboardingActivity.this, MapActivity.class);
+                OnboardingActivity.this.startActivity(intent);
+            }
+        });
+
     }
 
     @Override
