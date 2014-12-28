@@ -47,10 +47,9 @@ public class SplashActivity extends Activity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                //boolean firstRun = mSharedPreferencesHelper.isFirstRun(SplashActivity.this);
-                boolean firstRun = true;
+                boolean firstRun = mSharedPreferencesHelper.isFirstRun(SplashActivity.this);
                 Class<?> clazz = firstRun
-                        ? OnboardingActivity.class : MapActivity.class;
+                        ? OnboardingActivity.class : MapsActivity.class;
                 if (firstRun) {
                     mSharedPreferencesHelper.setFirstRun(SplashActivity.this, false);
                 }

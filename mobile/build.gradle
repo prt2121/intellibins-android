@@ -67,13 +67,13 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 //    wearApp project(':wear')
-    compile 'com.android.support:appcompat-v7:21.0.3'
-    compile 'com.google.android.gms:play-services:6.5.87'
 
     androidTestCompile 'junit:junit:4.10'
     androidTestCompile 'org.robolectric:robolectric:2.4'
     //androidTestCompile 'org.robolectric:robolectric:2.4-SNAPSHOT'
     androidTestCompile 'com.squareup:fest-android:1.0.8'
+    compile 'com.android.support:appcompat-v7:21.0.3'
+    compile 'com.google.android.gms:play-services:6.5.87'
 }
 
 robolectric {
