@@ -41,7 +41,10 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:text="@string/intellibins" />
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@android:color/white"
+        android:text="@string/intellibins"
+        android:textStyle="bold" />
 
 </RelativeLayout>
 
