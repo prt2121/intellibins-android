@@ -39,13 +39,16 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.widget.Button;
 
-public class OnboardingActivity extends ActionBarActivity {
+public class OnboardingActivity extends ActionBarActivity
+        implements ViewPager.OnPageChangeListener {
 
     private static final int NUM_PAGES = 3;
 
     private ViewPager mPager;
 
     private Button mSkipButton;
+
+    private Button mNextButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,19 +59,36 @@ public class OnboardingActivity extends ActionBarActivity {
         PagerAdapter pagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
         mPager.setAdapter(pagerAdapter);
 
-        CirclePageIndicator circlePageIndicator = (CirclePageIndicator) findViewById(R.id.indicator);
+        CirclePageIndicator circlePageIndicator =
+                (CirclePageIndicator) findViewById(R.id.indicator);
         circlePageIndicator.setViewPager(mPager);
+        circlePageIndicator.setOnPageChangeListener(this);
 
         mSkipButton = (Button) findViewById(R.id.skipButton);
-        mSkipButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(OnboardingActivity.this, MapActivity.class);
-                OnboardingActivity.this.startActivity(intent);
-            }
-        });
+        mSkipButton.setOnClickListener(skipButtonOnClickListener);
 
+        mNextButton = (Button) findViewById(R.id.nextButton);
+        mNextButton.setOnClickListener(nextButtonOnClickListener);
     }
+
+    View.OnClickListener skipButtonOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(OnboardingActivity.this, MapActivity.class);
+            OnboardingActivity.this.startActivity(intent);
+            OnboardingActivity.this.finish();
+        }
+    };
+
+    View.OnClickListener nextButtonOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (mPager.getCurrentItem() + 1 < NUM_PAGES) {
+                mPager.setCurrentItem(mPager.getCurrentItem() + 1, true);
+                // smoothScroll doesn't work
+            }
+        }
+    };
 
     @Override
     public void onBackPressed() {
@@ -77,6 +97,29 @@ public class OnboardingActivity extends ActionBarActivity {
         } else {
             mPager.setCurrentItem(mPager.getCurrentItem() - 1);
         }
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        onPageSelected(position);
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        if (position >= NUM_PAGES - 1) {
+            mSkipButton.setVisibility(View.GONE);
+            mNextButton.setText("DONE");
+            mNextButton.setOnClickListener(skipButtonOnClickListener);
+        } else {
+            mSkipButton.setVisibility(View.VISIBLE);
+            mNextButton.setText("NEXT");
+            mNextButton.setOnClickListener(nextButtonOnClickListener);
+        }
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
     }
 
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
