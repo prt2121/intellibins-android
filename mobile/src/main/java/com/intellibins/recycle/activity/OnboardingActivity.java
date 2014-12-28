@@ -34,7 +34,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
-
+import com.viewpagerindicator.CirclePageIndicator;
 
 public class OnboardingActivity extends ActionBarActivity {
 
@@ -42,14 +42,19 @@ public class OnboardingActivity extends ActionBarActivity {
 
     private ViewPager mPager;
 
+    private CirclePageIndicator mIndicator;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_onboarding);
 
-        mPager = (ViewPager) findViewById(R.id.pager_onboarding);
+        mPager = (ViewPager) findViewById(R.id.onboardingViewPager);
         PagerAdapter pagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
         mPager.setAdapter(pagerAdapter);
+
+        mIndicator = (CirclePageIndicator) findViewById(R.id.indicator);
+        mIndicator.setViewPager(mPager);
     }
 
     @Override

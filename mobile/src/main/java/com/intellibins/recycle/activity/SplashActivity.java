@@ -42,12 +42,13 @@ public class SplashActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-        int splashScreenTimeout = 2000;
+        int splashScreenTimeout = 3000;
         mSharedPreferencesHelper = SharedPreferencesHelperFactory.get();
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                boolean firstRun = mSharedPreferencesHelper.isFirstRun(SplashActivity.this);
+                //boolean firstRun = mSharedPreferencesHelper.isFirstRun(SplashActivity.this);
+                boolean firstRun = true;
                 Class<?> clazz = firstRun
                         ? OnboardingActivity.class : MapActivity.class;
                 if (firstRun) {

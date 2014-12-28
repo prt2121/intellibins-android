@@ -55,7 +55,8 @@ public class OnboardingFragment extends Fragment {
             Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.view_onboarding, container, false);
         Bundle args = getArguments();
-        ((TextView) rootView.findViewById(R.id.textview_onboarding)).setText(
+        ((TextView) rootView.findViewById(R.id.onboardingTextView)).setText(
+                "Onboarding " +
                 Integer.toString(args.getInt(ARG_POSITION)));
         return rootView;
     }
