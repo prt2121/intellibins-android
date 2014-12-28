@@ -23,63 +23,34 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-apply plugin: 'com.android.application'
-apply plugin: 'robolectric'
+package com.intellibins.recycle.model.nyc;
 
-repositories {
-    maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
-    mavenCentral()
-}
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
-android {
-    compileSdkVersion 21
-    buildToolsVersion "21.1.1"
+public class Metadata {
 
-    defaultConfig {
-        applicationId "com.intellibins.recycle"
-        minSdkVersion 14
-        targetSdkVersion 21
-        versionCode 1
-        versionName "1.0"
+    @SerializedName("custom_fields")
+    @Expose
+    private CustomFields customFields;
+
+    @Expose
+    private String rdfSubject;
+
+    public CustomFields getCustomFields() {
+        return customFields;
     }
 
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
+    public void setCustomFields(CustomFields customFields) {
+        this.customFields = customFields;
     }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
-    sourceSets {
-        androidTest {
-            setRoot('src/androidTest')
-        }
-    }
-    lintOptions {
-        abortOnError false
-        disable 'InvalidPackage'
-    }
-}
 
-dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-//    wearApp project(':wear')
+    public String getRdfSubject() {
+        return rdfSubject;
+    }
 
-    androidTestCompile 'junit:junit:4.10'
-    androidTestCompile 'org.robolectric:robolectric:2.4'
-    //androidTestCompile 'org.robolectric:robolectric:2.4-SNAPSHOT'
-    androidTestCompile 'com.squareup:fest-android:1.0.8'
-    compile 'com.android.support:appcompat-v7:21.0.3'
-    compile 'com.google.android.gms:play-services:6.5.87'
-    compile 'com.google.code.gson:gson:2.3'
-    compile 'io.reactivex:rxjava:1.0.0'
-    compile 'io.reactivex:rxandroid:0.23.0'
-}
+    public void setRdfSubject(String rdfSubject) {
+        this.rdfSubject = rdfSubject;
+    }
 
-robolectric {
-    include '**/*Test.class'
-    maxHeapSize = "2048m"
 }
