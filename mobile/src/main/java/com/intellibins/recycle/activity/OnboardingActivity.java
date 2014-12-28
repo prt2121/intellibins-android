@@ -85,7 +85,7 @@ public class OnboardingActivity extends ActionBarActivity
         public void onClick(View v) {
             if (mPager.getCurrentItem() + 1 < NUM_PAGES) {
                 mPager.setCurrentItem(mPager.getCurrentItem() + 1, true);
-                // smoothScroll doesn't work
+                // TODO smoothScroll doesn't work
             }
         }
     };
