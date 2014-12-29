@@ -32,15 +32,24 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import com.intellibins.recycle.R;
+import com.intellibins.recycle.RecycleApp;
+import com.intellibins.recycle.model.Loc;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
+
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 public class MapsActivity extends FragmentActivity {
 
+    private static final String TAG = MapsActivity.class.getSimpleName();
+
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
 
-    private static final LatLng TEST_LOC = new LatLng(40.7680441,-73.9823722);
+    private static final LatLng TEST_LOC = new LatLng(40.7680441, -73.9823722);
 
     private static final float ZOOM = 16.5f;
 

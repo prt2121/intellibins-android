@@ -23,27 +23,25 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
+package com.intellibins.recycle.binlocation;
 
-buildscript {
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:1.0.0'
-        classpath 'org.robolectric:robolectric-gradle-plugin:0.14.+'
-        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.4'
+import android.app.Application;
 
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
-    }
-}
+import javax.inject.Singleton;
 
-allprojects {
-    repositories {
-        jcenter()
-        maven {
-            url "https://oss.sonatype.org/content/repositories/snapshots"
-        }
+import dagger.Module;
+import dagger.Provides;
+
+/**
+ * Created by prt2121 on 9/27/14.
+ */
+@Module
+public class BinLocationModule {
+
+    @Provides
+    @Singleton
+    public IFindBin provideNycBinLocation(Application app) {
+        return new NycBinLocation(app);
     }
+
 }

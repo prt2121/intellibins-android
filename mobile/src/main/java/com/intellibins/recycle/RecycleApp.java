@@ -23,27 +23,30 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
+package com.intellibins.recycle;
 
-buildscript {
-    repositories {
-        jcenter()
+import com.intellibins.recycle.binlocation.BinLocationModule;
+
+import android.app.Application;
+import android.content.Context;
+
+/**
+ * Created by prt2121 on 12/28/14.
+ */
+public class RecycleApp extends Application {
+
+    private RecycleMachine mRecycleMachine;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        mRecycleMachine = Dagger_RecycleMachine.builder()
+                .recycleModule(new RecycleModule(this))
+                .binLocationModule(new BinLocationModule())
+                .build();
     }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:1.0.0'
-        classpath 'org.robolectric:robolectric-gradle-plugin:0.14.+'
-        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.4'
 
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
-    }
-}
-
-allprojects {
-    repositories {
-        jcenter()
-        maven {
-            url "https://oss.sonatype.org/content/repositories/snapshots"
-        }
+    public static RecycleMachine getRecycleMachine(Context context) {
+        return ((RecycleApp) context.getApplicationContext()).mRecycleMachine;
     }
 }
