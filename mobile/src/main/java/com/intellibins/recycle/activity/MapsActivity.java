@@ -65,17 +65,18 @@ public class MapsActivity extends FragmentActivity {
         subscription = RecycleApp.getRecycleMachine(this)
                 .locator()
                 .getLocs()
+                .onBackpressureBuffer()
                 .subscribeOn(Schedulers.newThread())
-                //.observeOn(AndroidSchedulers.mainThread())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<Loc>() {
                     @Override
                     public void onCompleted() {
-
+                        Log.d(TAG, "onCompleted");
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.e(TAG, e.getLocalizedMessage());
+                        Log.e(TAG, e.getMessage());
                     }
 
                     @Override
