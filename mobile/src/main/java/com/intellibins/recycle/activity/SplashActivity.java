@@ -44,19 +44,16 @@ public class SplashActivity extends Activity {
         setContentView(R.layout.activity_splash);
         int splashScreenTimeout = 3000;
         mSharedPreferencesHelper = SharedPreferencesHelperFactory.get();
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                boolean firstRun = mSharedPreferencesHelper.isFirstRun(SplashActivity.this);
-                Class<?> clazz = firstRun
-                        ? OnboardingActivity.class : MapsActivity.class;
-                if (firstRun) {
-                    mSharedPreferencesHelper.setFirstRun(SplashActivity.this, false);
-                }
-                Intent intent = new Intent(SplashActivity.this, clazz);
-                SplashActivity.this.startActivity(intent);
-                SplashActivity.this.finish();
+        new Handler().postDelayed(() -> {
+            boolean firstRun = mSharedPreferencesHelper.isFirstRun(SplashActivity.this);
+            Class<?> clazz = firstRun
+                    ? OnboardingActivity.class : MapsActivity.class;
+            if (firstRun) {
+                mSharedPreferencesHelper.setFirstRun(SplashActivity.this, false);
             }
+            Intent intent = new Intent(SplashActivity.this, clazz);
+            SplashActivity.this.startActivity(intent);
+            SplashActivity.this.finish();
         }, splashScreenTimeout);
     }
 

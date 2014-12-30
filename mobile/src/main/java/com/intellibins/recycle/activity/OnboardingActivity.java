@@ -71,13 +71,10 @@ public class OnboardingActivity extends ActionBarActivity
         mNextButton.setOnClickListener(nextButtonOnClickListener);
     }
 
-    View.OnClickListener skipButtonOnClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            Intent intent = new Intent(OnboardingActivity.this, MapsActivity.class);
-            OnboardingActivity.this.startActivity(intent);
-            OnboardingActivity.this.finish();
-        }
+    View.OnClickListener skipButtonOnClickListener = v -> {
+        Intent intent = new Intent(OnboardingActivity.this, MapsActivity.class);
+        OnboardingActivity.this.startActivity(intent);
+        OnboardingActivity.this.finish();
     };
 
     View.OnClickListener nextButtonOnClickListener = new View.OnClickListener() {

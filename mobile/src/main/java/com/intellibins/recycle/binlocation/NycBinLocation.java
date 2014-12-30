@@ -71,60 +71,42 @@ public class NycBinLocation implements IFindBin {
             InputStream inputStream = res.openRawResource(R.raw.json);
             return StringObservable.stringConcat(
                     StringObservable.from(inputStream)
-                            .map(new Func1<byte[], String>() {
-                                @Override
-                                public String call(byte[] bytes) {
-                                    return new String(bytes);
-                                }
-                            }));
+                            .map(String::new));
         } catch (Exception e) {
             return Observable.empty();
         }
     }
 
     private Observable<Loc> makeBins(final BinData binData) {
-        return Observable.create(new Observable.OnSubscribe<Loc>() {
-            @Override
-            public void call(final Subscriber<? super Loc> subscriber) {
-                List<List<String>> lists = binData.getData();
-                for (List<String> strings : lists) {
-                    try {
-                        int len = strings.size();
-                        if (strings.contains("null") || strings.contains(null)) {
-                            continue;
-                        }
-                        Loc loc = new Loc.Builder(strings.get(len - 4))
-                                .address(strings.get(len - 3))
-                                .latitude(Double.parseDouble(strings.get(len - 2)))
-                                .longitude(Double.parseDouble(strings.get(len - 1)))
-                                .build();
-                        if (!subscriber.isUnsubscribed()) {
-                            subscriber.onNext(loc);
-                        }
-                    } catch (Exception ex) {
-                        Log.e(TAG, ex.toString());
-                        subscriber.onError(ex);
+        return Observable.create(subscriber -> {
+            List<List<String>> lists = binData.getData();
+            for (List<String> strings : lists) {
+                try {
+                    int len = strings.size();
+                    if (strings.contains("null") || strings.contains(null)) {
+                        continue;
                     }
+                    Loc loc = new Loc.Builder(strings.get(len - 4))
+                            .address(strings.get(len - 3))
+                            .latitude(Double.parseDouble(strings.get(len - 2)))
+                            .longitude(Double.parseDouble(strings.get(len - 1)))
+                            .build();
+                    if (!subscriber.isUnsubscribed()) {
+                        subscriber.onNext(loc);
+                    }
+                } catch (Exception ex) {
+                    Log.e(TAG, ex.toString());
+                    subscriber.onError(ex);
                 }
-                subscriber.onCompleted();
             }
+            subscriber.onCompleted();
         });
     }
 
     @Override
     public Observable<Loc> getLocs() {
         return getJsonText(mApp.getApplicationContext())
-                .flatMap(new Func1<String, Observable<BinData>>() {
-                    @Override
-                    public Observable<BinData> call(String jsonString) {
-                        return parseJson(jsonString);
-                    }
-                }).flatMap(new Func1<BinData, Observable<Loc>>() {
-                    @Override
-                    public Observable<Loc> call(BinData binData) {
-                        return makeBins(binData);
-                    }
-                });
+                .flatMap(this::parseJson).flatMap(this::makeBins);
     }
 
 }
