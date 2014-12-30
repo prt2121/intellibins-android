@@ -25,7 +25,6 @@
 
 package com.intellibins.recycle.binlocation;
 
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import com.intellibins.recycle.R;
@@ -43,6 +42,7 @@ import java.util.List;
 import rx.Observable;
 import rx.Subscriber;
 import rx.functions.Func1;
+import rx.observables.StringObservable;
 
 /**
  * Created by prt2121 on 9/27/14.
@@ -57,19 +57,26 @@ public class NycBinLocation implements IFindBin {
         mApp = app;
     }
 
-    private BinData parseJson(String jsonText) {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        return gson.fromJson(jsonText, BinData.class);
+    private Observable<BinData> parseJson(String jsonText) {
+        return Observable.just(
+                new GsonBuilder()
+                        .setPrettyPrinting()
+                        .create()
+                        .fromJson(jsonText, BinData.class));
     }
 
     private Observable<String> getJsonText(Context context) {
         try {
             Resources res = context.getResources();
             InputStream inputStream = res.openRawResource(R.raw.json);
-            byte[] b = new byte[inputStream.available()];
-            int bytes = inputStream.read(b);
-            return bytes == -1 ? Observable.<String>empty()
-                    : Observable.just(new String(b));
+            return StringObservable.stringConcat(
+                    StringObservable.from(inputStream)
+                            .map(new Func1<byte[], String>() {
+                                @Override
+                                public String call(byte[] bytes) {
+                                    return new String(bytes);
+                                }
+                            }));
         } catch (Exception e) {
             return Observable.empty();
         }
@@ -79,29 +86,27 @@ public class NycBinLocation implements IFindBin {
         return Observable.create(new Observable.OnSubscribe<Loc>() {
             @Override
             public void call(final Subscriber<? super Loc> subscriber) {
-                final Thread t = new Thread(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        List<List<String>> lists = binData.getData();
-                        for (List<String> strings : lists) {
-                            try {
-                                int len = strings.size();
-                                Loc loc = new Loc.Builder(strings.get(len - 4))
-                                        .address(strings.get(len - 3))
-                                        .latitude(Double.parseDouble(strings.get(len - 2)))
-                                        .longitude(Double.parseDouble(strings.get(len - 1)))
-                                        .build();
-                                subscriber.onNext(loc);
-                            } catch (Exception ex) {
-                                Log.e(TAG, "#makeBins " + strings.toString());
-                                Log.e(TAG, ex.toString());
-                            }
+                List<List<String>> lists = binData.getData();
+                for (List<String> strings : lists) {
+                    try {
+                        int len = strings.size();
+                        if (strings.contains("null") || strings.contains(null)) {
+                            continue;
                         }
-                        subscriber.onCompleted();
+                        Loc loc = new Loc.Builder(strings.get(len - 4))
+                                .address(strings.get(len - 3))
+                                .latitude(Double.parseDouble(strings.get(len - 2)))
+                                .longitude(Double.parseDouble(strings.get(len - 1)))
+                                .build();
+                        Log.d(TAG, "loc " + loc.name);
+                        subscriber.onNext(loc);
+                    } catch (Exception ex) {
+                        Log.e(TAG, "#makeBins " + strings.toString());
+                        Log.e(TAG, ex.toString());
+                        subscriber.onError(ex);
                     }
-                });
-                t.start();
+                }
+                subscriber.onCompleted();
             }
         });
     }
@@ -109,9 +114,9 @@ public class NycBinLocation implements IFindBin {
     @Override
     public Observable<Loc> getLocs() {
         return getJsonText(mApp.getApplicationContext())
-                .map(new Func1<String, BinData>() {
+                .flatMap(new Func1<String, Observable<BinData>>() {
                     @Override
-                    public BinData call(String jsonString) {
+                    public Observable<BinData> call(String jsonString) {
                         return parseJson(jsonString);
                     }
                 }).flatMap(new Func1<BinData, Observable<Loc>>() {
