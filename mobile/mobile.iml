@@ -90,8 +90,9 @@
     <orderEntry type="library" exported="" scope="TEST" name="objenesis-1.3" level="project" />
     <orderEntry type="library" exported="" name="rxandroid-0.23.0" level="project" />
     <orderEntry type="library" exported="" name="support-v4-21.0.3" level="project" />
-    <orderEntry type="library" exported="" name="rxjava-1.0.0" level="project" />
+    <orderEntry type="library" exported="" name="rxjava-1.0.1" level="project" />
     <orderEntry type="library" exported="" name="appcompat-v7-21.0.3" level="project" />
+    <orderEntry type="library" exported="" name="rxjava-string-0.22.0" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="ant-1.8.0" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="fest-android-1.0.8" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="maven-ant-tasks-2.1.3" level="project" />

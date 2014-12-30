@@ -98,10 +98,8 @@ public class NycBinLocation implements IFindBin {
                                 .latitude(Double.parseDouble(strings.get(len - 2)))
                                 .longitude(Double.parseDouble(strings.get(len - 1)))
                                 .build();
-                        Log.d(TAG, "loc " + loc.name);
                         subscriber.onNext(loc);
                     } catch (Exception ex) {
-                        Log.e(TAG, "#makeBins " + strings.toString());
                         Log.e(TAG, ex.toString());
                         subscriber.onError(ex);
                     }

@@ -39,6 +39,8 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 
+import rx.Subscriber;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
@@ -53,17 +55,46 @@ public class MapsActivity extends FragmentActivity {
 
     private static final float ZOOM = 16.5f;
 
+    private Subscription subscription;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         setUpMapIfNeeded();
+        subscription = RecycleApp.getRecycleMachine(this)
+                .locator()
+                .getLocs()
+                .subscribeOn(Schedulers.newThread())
+                //.observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<Loc>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e(TAG, e.getLocalizedMessage());
+                    }
+
+                    @Override
+                    public void onNext(Loc loc) {
+                        Log.d(TAG, loc.name);
+                    }
+                });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         setUpMapIfNeeded();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        subscription.unsubscribe();
     }
 
     /**
