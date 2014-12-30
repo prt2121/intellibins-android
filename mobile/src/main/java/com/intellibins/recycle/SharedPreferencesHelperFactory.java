@@ -35,8 +35,9 @@ public class SharedPreferencesHelperFactory {
     private static ISharedPreferencesHelper mSharedPreferencesHelper = null;
 
     public static ISharedPreferencesHelper get() {
-        if(mSharedPreferencesHelper == null) {
-            mSharedPreferencesHelper = testing ? new MockSharedPreferencesHelper() : new SharedPreferencesHelper();
+        if (mSharedPreferencesHelper == null) {
+            mSharedPreferencesHelper = testing ? new MockSharedPreferencesHelper()
+                    : new SharedPreferencesHelper();
         }
         return mSharedPreferencesHelper;
     }

@@ -41,5 +41,6 @@ import dagger.Component;
 })
 @Singleton
 public interface RecycleMachine {
+
     IFindBin locator();
 }

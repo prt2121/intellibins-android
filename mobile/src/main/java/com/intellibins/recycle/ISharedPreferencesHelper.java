@@ -33,5 +33,6 @@ import android.content.Context;
 public interface ISharedPreferencesHelper {
 
     public boolean isFirstRun(Context context);
+
     public void setFirstRun(Context context, boolean firstRun);
 }

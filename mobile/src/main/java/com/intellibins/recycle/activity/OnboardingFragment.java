@@ -57,7 +57,7 @@ public class OnboardingFragment extends Fragment {
         Bundle args = getArguments();
         ((TextView) rootView.findViewById(R.id.onboardingTextView)).setText(
                 "Onboarding " +
-                Integer.toString(args.getInt(ARG_POSITION)));
+                        Integer.toString(args.getInt(ARG_POSITION)));
         return rootView;
     }
 
