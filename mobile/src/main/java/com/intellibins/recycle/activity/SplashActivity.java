@@ -27,16 +27,25 @@ package com.intellibins.recycle.activity;
 
 import com.intellibins.recycle.ISharedPreferencesHelper;
 import com.intellibins.recycle.R;
+import com.intellibins.recycle.RecycleApp;
+import com.intellibins.recycle.RecycleMachine;
 import com.intellibins.recycle.SharedPreferencesHelperFactory;
+import com.intellibins.recycle.Utils;
+import com.intellibins.recycle.userlocation.IUserLocation;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
+import javax.inject.Inject;
+
 public class SplashActivity extends Activity {
 
     private ISharedPreferencesHelper mSharedPreferencesHelper;
+
+    @Inject
+    IUserLocation mUserLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +64,18 @@ public class SplashActivity extends Activity {
             SplashActivity.this.startActivity(intent);
             SplashActivity.this.finish();
         }, splashScreenTimeout);
+
+        RecycleMachine machine = RecycleApp.getRecycleMachine(this);
+        mUserLocation = machine.locateUser();
+        mUserLocation.start();
+        mUserLocation.observe()
+                .take(1)
+                .subscribe(location -> Utils.saveUserLocationToPreference(SplashActivity.this, location));
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mUserLocation.stop();
+    }
 }

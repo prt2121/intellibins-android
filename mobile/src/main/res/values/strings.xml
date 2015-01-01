@@ -33,5 +33,7 @@
     <string name="skip">SKIP</string>
     <string name="next">NEXT</string>
     <string name="title_activity_maps">Map</string>
+    <string name="preference_user_location">userLocationPreference</string>
+    <string name="user_location">userLocation</string>
 
 </resources>

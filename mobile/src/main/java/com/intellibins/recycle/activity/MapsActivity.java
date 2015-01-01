@@ -34,9 +34,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.intellibins.recycle.R;
 import com.intellibins.recycle.RecycleApp;
 import com.intellibins.recycle.RecycleMachine;
+import com.intellibins.recycle.Utils;
 import com.intellibins.recycle.model.Loc;
 import com.intellibins.recycle.userlocation.IUserLocation;
 
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -46,6 +48,7 @@ import javax.inject.Inject;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 public class MapsActivity extends FragmentActivity {
@@ -54,7 +57,7 @@ public class MapsActivity extends FragmentActivity {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
 
-    private static final LatLng TEST_LOC = new LatLng(40.7680441, -73.9823722);
+    private static LatLng mLatLng = new LatLng(40.7680441, -73.9823722); //Columbus Circle
 
     private static final float ZOOM = 16.5f;
 
@@ -67,7 +70,11 @@ public class MapsActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        setUpMapIfNeeded();
+        final Location lastLocation = Utils.getUserLocationFromPreference(this);
+        if (lastLocation != null) {
+            mLatLng = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
+        }
+        setUpMapIfNeeded(mLatLng);
         RecycleMachine machine = RecycleApp.getRecycleMachine(this);
         subscription = machine
                 .finBin()
@@ -96,15 +103,19 @@ public class MapsActivity extends FragmentActivity {
         mUserLocation.start();
         mUserLocation.observe()
                 .take(1)
-                .subscribe(location ->
-                        Log.d(TAG, "location " +
-                                location.getLatitude() + " , " + location.getLongitude()));
+                .subscribe(location -> {
+                    Utils.saveUserLocationToPreference(MapsActivity.this, location);
+                    if (lastLocation == null || !lastLocation.equals(location)) {
+                        mLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+                        setUpMapIfNeeded(mLatLng);
+                    }
+                });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        setUpMapIfNeeded();
+        setUpMapIfNeeded(mLatLng);
     }
 
     @Override
@@ -115,10 +126,9 @@ public class MapsActivity extends FragmentActivity {
     }
 
     /**
-     * Sets up the map if it is possible to do so (i.e., the Google Play services APK is correctly
-     * installed) and the map has not already been instantiated.. This will ensure that we only
-     * ever
-     * call {@link #setUpMap()} once when {@link #mMap} is not null.
+     * Sets up the map if it is possible to do so and the map has not already been instantiated.
+     * This will ensure that we only ever
+     * call {@link #setUpMap(LatLng latLng)} once when {@link #mMap} is not null.
      * <p>
      * If it isn't installed {@link SupportMapFragment} (and
      * {@link com.google.android.gms.maps.MapView MapView}) will show a prompt for the user to
@@ -130,7 +140,7 @@ public class MapsActivity extends FragmentActivity {
      * stopped or paused), {@link #onCreate(Bundle)} may not be called again so we should call this
      * method in {@link #onResume()} to guarantee that it will be called.
      */
-    private void setUpMapIfNeeded() {
+    private void setUpMapIfNeeded(LatLng latLng) {
         // Do a null check to confirm that we have not already instantiated the map.
         if (mMap == null) {
             // Try to obtain the map from the SupportMapFragment.
@@ -138,7 +148,7 @@ public class MapsActivity extends FragmentActivity {
                     .getMap();
             // Check if we were successful in obtaining the map.
             if (mMap != null) {
-                setUpMap();
+                setUpMap(latLng);
             }
         }
     }
@@ -150,9 +160,8 @@ public class MapsActivity extends FragmentActivity {
      * <p>
      * This should only be called once and when we are sure that {@link #mMap} is not null.
      */
-    private void setUpMap() {
-        mMap.addMarker(
-                new MarkerOptions().position(TEST_LOC).title("Columbus Circle"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(TEST_LOC, ZOOM));
+    private void setUpMap(LatLng latLng) {
+        mMap.addMarker(new MarkerOptions().position(latLng));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, ZOOM));
     }
 }
