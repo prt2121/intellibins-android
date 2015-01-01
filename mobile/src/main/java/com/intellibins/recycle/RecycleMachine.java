@@ -27,6 +27,8 @@ package com.intellibins.recycle;
 
 import com.intellibins.recycle.binlocation.BinLocationModule;
 import com.intellibins.recycle.binlocation.IFindBin;
+import com.intellibins.recycle.userlocation.IUserLocation;
+import com.intellibins.recycle.userlocation.UserLocationModule;
 
 import javax.inject.Singleton;
 
@@ -38,9 +40,12 @@ import dagger.Component;
 @Component(modules = {
         RecycleModule.class,
         BinLocationModule.class,
+        UserLocationModule.class
 })
 @Singleton
 public interface RecycleMachine {
 
-    IFindBin locator();
+    IFindBin finBin();
+
+    IUserLocation locateUser();
 }

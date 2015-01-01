@@ -26,6 +26,7 @@
 package com.intellibins.recycle;
 
 import com.intellibins.recycle.binlocation.BinLocationModule;
+import com.intellibins.recycle.userlocation.UserLocationModule;
 
 import android.app.Application;
 import android.content.Context;
@@ -43,6 +44,7 @@ public class RecycleApp extends Application {
         mRecycleMachine = Dagger_RecycleMachine.builder()
                 .recycleModule(new RecycleModule(this))
                 .binLocationModule(new BinLocationModule())
+                .userLocationModule(new UserLocationModule(this))
                 .build();
     }
 

@@ -33,11 +33,15 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import com.intellibins.recycle.R;
 import com.intellibins.recycle.RecycleApp;
+import com.intellibins.recycle.RecycleMachine;
 import com.intellibins.recycle.model.Loc;
+import com.intellibins.recycle.userlocation.IUserLocation;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+
+import javax.inject.Inject;
 
 import rx.Subscriber;
 import rx.Subscription;
@@ -56,13 +60,17 @@ public class MapsActivity extends FragmentActivity {
 
     private Subscription subscription;
 
+    @Inject
+    IUserLocation mUserLocation;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         setUpMapIfNeeded();
-        subscription = RecycleApp.getRecycleMachine(this)
-                .locator()
+        RecycleMachine machine = RecycleApp.getRecycleMachine(this);
+        subscription = machine
+                .finBin()
                 .getLocs()
                 .onBackpressureBuffer()
                 .subscribeOn(Schedulers.newThread())
@@ -80,9 +88,17 @@ public class MapsActivity extends FragmentActivity {
 
                     @Override
                     public void onNext(Loc loc) {
-                        Log.d(TAG, loc.name);
+                        //Log.d(TAG, loc.name);
                     }
                 });
+
+        mUserLocation = machine.locateUser();
+        mUserLocation.start();
+        mUserLocation.observe()
+                .take(1)
+                .subscribe(location ->
+                        Log.d(TAG, "location " +
+                                location.getLatitude() + " , " + location.getLongitude()));
     }
 
     @Override
@@ -94,6 +110,7 @@ public class MapsActivity extends FragmentActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        mUserLocation.stop();
         subscription.unsubscribe();
     }
 

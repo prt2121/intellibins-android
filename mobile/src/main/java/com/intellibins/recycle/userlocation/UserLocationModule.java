@@ -36,10 +36,7 @@ import dagger.Provides;
 /**
  * Created by prt2121 on 9/30/14.
  */
-@Module(
-        complete = false,
-        library = true
-)
+@Module
 public class UserLocationModule {
 
     private final Application mApp;
