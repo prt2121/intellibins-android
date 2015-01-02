@@ -28,13 +28,14 @@ package com.intellibins.recycle.activity;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import com.intellibins.recycle.LocUtils;
 import com.intellibins.recycle.R;
 import com.intellibins.recycle.RecycleApp;
 import com.intellibins.recycle.RecycleMachine;
-import com.intellibins.recycle.Utils;
 import com.intellibins.recycle.model.Loc;
 import com.intellibins.recycle.userlocation.IUserLocation;
 
@@ -43,12 +44,15 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
+import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 public class MapsActivity extends FragmentActivity {
@@ -57,29 +61,48 @@ public class MapsActivity extends FragmentActivity {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
 
-    private static LatLng mLatLng = new LatLng(40.7680441, -73.9823722); //Columbus Circle
+    //private static LatLng mLatLng = new LatLng(40.7680441, -73.9823722); //Columbus Circle
 
-    private static final float ZOOM = 16.5f;
+    private static LatLng mLatLng = new LatLng(40.715522, -74.002452);
+            //New York City Department of Health and Mental Hygiene
+
+    private static final float ZOOM = 17f;
+
+    private static final int MAX_LOCATION = 10;
 
     private Subscription subscription;
 
     @Inject
     IUserLocation mUserLocation;
 
+    Func1<Location, Observable<List<Loc>>> findClosestBins
+            = location -> RecycleApp.getRecycleMachine(MapsActivity.this).finBin().getLocs()
+            .toSortedList(
+                    LocUtils.compare(mLatLng.latitude, mLatLng.longitude));
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        final Location lastLocation = Utils.getUserLocationFromPreference(this);
-        if (lastLocation != null) {
-            mLatLng = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
-        }
+//        final Location lastLocation = Utils.getUserLocationFromPreference(this);
+//        if (lastLocation != null) {
+//            mLatLng = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
+//        }
         setUpMapIfNeeded(mLatLng);
+
         RecycleMachine machine = RecycleApp.getRecycleMachine(this);
-        subscription = machine
-                .finBin()
-                .getLocs()
-                .onBackpressureBuffer()
+        mUserLocation = machine.locateUser();
+        mUserLocation.start();
+
+        Location mockLocation = new Location("");
+        mockLocation.setLatitude(mLatLng.latitude);
+        mockLocation.setLongitude(mLatLng.longitude);
+        Observable<Location> mockObservable = Observable.just(mockLocation);
+
+        subscription = mockObservable
+                .flatMap(findClosestBins)
+                .flatMap(Observable::from)
+                .take(MAX_LOCATION).onBackpressureBuffer()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<Loc>() {
@@ -95,21 +118,25 @@ public class MapsActivity extends FragmentActivity {
 
                     @Override
                     public void onNext(Loc loc) {
-                        //Log.d(TAG, loc.name);
+                        if (mMap != null) {
+                            mMap.addMarker(new MarkerOptions()
+                                    .position(new LatLng(loc.latitude, loc.longitude))
+                                    .title(loc.name)
+                                    .icon(BitmapDescriptorFactory
+                                            .defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                        }
                     }
                 });
 
-        mUserLocation = machine.locateUser();
-        mUserLocation.start();
-        mUserLocation.observe()
-                .take(1)
-                .subscribe(location -> {
-                    Utils.saveUserLocationToPreference(MapsActivity.this, location);
-                    if (lastLocation == null || !lastLocation.equals(location)) {
-                        mLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-                        setUpMapIfNeeded(mLatLng);
-                    }
-                });
+//        subscription = mUserLocation
+//                .observe()
+//                .take(1)
+//                .flatMap(findClosestBins)
+//                .flatMap(Observable::from)
+//                .take(MAX_LOCATION).onBackpressureBuffer()
+//                .subscribeOn(Schedulers.newThread())
+//                .observeOn(AndroidSchedulers.mainThread())
+
     }
 
     @Override
@@ -154,9 +181,7 @@ public class MapsActivity extends FragmentActivity {
     }
 
     /**
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we
-     * just add a marker near Africa.
+     * This is where we can add markers or lines, add listeners or move the camera.
      * <p>
      * This should only be called once and when we are sure that {@link #mMap} is not null.
      */

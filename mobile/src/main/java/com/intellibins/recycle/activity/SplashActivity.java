@@ -70,7 +70,8 @@ public class SplashActivity extends Activity {
         mUserLocation.start();
         mUserLocation.observe()
                 .take(1)
-                .subscribe(location -> Utils.saveUserLocationToPreference(SplashActivity.this, location));
+                .subscribe(location ->
+                        Utils.saveUserLocationToPreference(SplashActivity.this, location));
     }
 
     @Override

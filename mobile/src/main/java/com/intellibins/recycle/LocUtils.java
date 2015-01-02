@@ -25,33 +25,42 @@
 
 package com.intellibins.recycle;
 
-import com.google.gson.Gson;
+import com.intellibins.recycle.model.Loc;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.location.Location;
+
+import rx.functions.Func2;
 
 /**
  * Created by prt2121 on 1/1/15.
  */
-public class Utils {
+public class LocUtils {
 
-    public static void saveUserLocationToPreference(Context context, Location location) {
-        SharedPreferences sharedPref = context.getSharedPreferences(
-                context.getString(R.string.preference_user_location), Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        Gson gson = new Gson();
-        String json = gson.toJson(location);
-        editor.putString(context.getString(R.string.user_location), json);
-        editor.apply();
+    private static double myLatitude;
+
+    private static double myLongitude;
+
+    public static Func2<Loc, Loc, Integer> compare(double lat, double lng) {
+        myLatitude = lat;
+        myLongitude = lng;
+        return f;
     }
 
-    public static Location getUserLocationFromPreference(Context context) {
-        SharedPreferences sharedPref = context.getSharedPreferences(
-                context.getString(R.string.preference_user_location), Context.MODE_PRIVATE);
-        Gson gson = new Gson();
-        String json = sharedPref.getString(context.getString(R.string.user_location), null);
-        return gson.fromJson(json, Location.class);
-    }
+    public static Func2<Loc, Loc, Integer> f = new Func2<Loc, Loc, Integer>() {
+        @Override
+        public Integer call(Loc loc1, Loc loc2) {
+            float[] result1 = new float[3];
+            Location.distanceBetween(myLatitude, myLongitude,
+                    loc1.latitude, loc1.longitude,
+                    result1);
+            Float distance1 = result1[0];
+            float[] result2 = new float[3];
+            Location.distanceBetween(myLatitude, myLongitude,
+                    loc2.latitude, loc2.longitude,
+                    result2);
+            Float distance2 = result2[0];
+            return distance1.compareTo(distance2);
+        }
+    };
 
 }
