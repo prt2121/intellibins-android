@@ -37,14 +37,25 @@
     tools:context=".SplashActivity">
 
     <TextView
+        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/imageView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:text="@string/intellibins"
+        android:textColor="@android:color/white"
+        android:textSize="25sp"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="140dp"
+        android:layout_height="140dp"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@android:color/white"
-        android:text="@string/intellibins"
-        android:textStyle="bold" />
+        android:contentDescription="@string/intellibins"
+        android:src="@drawable/smiley_bin" />
 
 </RelativeLayout>
 
