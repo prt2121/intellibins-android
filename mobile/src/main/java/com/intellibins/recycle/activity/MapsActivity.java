@@ -123,7 +123,7 @@ public class MapsActivity extends FragmentActivity {
                                     .position(new LatLng(loc.latitude, loc.longitude))
                                     .title(loc.name)
                                     .icon(BitmapDescriptorFactory
-                                            .defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                                            .defaultMarker(175))); //HSL: 175° 100% 34%
                         }
                     }
                 });
